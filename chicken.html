@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooked Product Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .error {
+            border-color: red;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex justify-center items-center">
+    <div class="max-w-md mx-auto p-4">
+        <h1 class="text-2xl font-semibold mb-4 text-center">Cooked Product Calculator</h1>
+        <div>
+            <label class="block mb-2">Grams of raw product for Mike:</label>
+            <input id="mike" type="number" class="w-full p-2 mb-4 border rounded focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+            <label class="block mb-2">Grams of raw product for Angelica:</label>
+            <input id="angelica" type="number" class="w-full p-2 mb-4 border rounded focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+            <label class="block mb-2">Total weight after cooking (grams):</label>
+            <input id="cookedWeight" type="number" class="w-full p-2 mb-4 border rounded focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+            <label class="block mb-2">Cooked product for Mike:</label>
+            <p id="cookedForMike" class="font-semibold"></p>
+        </div>
+        <div>
+            <label class="block mb-2">Cooked product for Angelica:</label>
+            <p id="cookedForAngelica" class="font-semibold"></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#mike, #angelica, #cookedWeight').on('input', function() {
+                calculate();
+            });
+        });
+
+        function calculate() {
+            var mikeWeight = parseInt($('#mike').val()) || 0;
+            var angelicaWeight = parseInt($('#angelica').val()) || 0;
+            var cookedWeight = parseInt($('#cookedWeight').val()) || 0;
+
+            if (mikeWeight <= 0 || angelicaWeight <= 0 || cookedWeight <= 0) {
+                $('.error').removeClass('error');
+                if (mikeWeight <= 0) $('#mike').addClass('error');
+                if (angelicaWeight <= 0) $('#angelica').addClass('error');
+                if (cookedWeight <= 0) $('#cookedWeight').addClass('error');
+                $('#cookedForMike').text('');
+                $('#cookedForAngelica').text('');
+                return;
+            }
+
+            $('.error').removeClass('error');
+
+            var ratioMike = mikeWeight / (mikeWeight + angelicaWeight);
+            var ratioAngelica = angelicaWeight / (mikeWeight + angelicaWeight);
+
+            var cookedForMike = Math.round(ratioMike * cookedWeight);
+            var cookedForAngelica = Math.round(ratioAngelica * cookedWeight);
+
+            $('#cookedForMike').text(cookedForMike + " grams");
+            $('#cookedForAngelica').text(cookedForAngelica + " grams");
+        }
+    </script>
+</body>
+</html>
